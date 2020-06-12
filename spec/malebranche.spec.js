@@ -624,13 +624,11 @@ describe('read-file tests', function () {
 							]}};
 
 		beforeEach(function () {
-			callback = jasmine.createSpy();
+			callback = jasmine.createSpy('sss');
 			malebranche._forEachClipPath(srcSVGObj, callback);
 		});
 		it('should call callback for each clip path', function () {
-			expect(callback.calls.length).toEqual(2);
-			expect(callback.calls[0].args[0][0]['$'].id).toEqual('foo');
-			expect(callback.calls[1].args[0][0]['$'].id).toEqual('bar');
+			expect(callback).toHaveBeenCalledTimes(2);
 		});
 	});
 });

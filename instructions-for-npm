@@ -10,9 +10,5 @@ How to update NPM package.
 
 
 How to run tests
-// run this command (assuming that jasmine-node is installed globally)
-jasmine-node spec
+npx jasmine
 
-How to run Malebranche
-// from command line
-malebranche <srcfile>

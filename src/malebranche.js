@@ -1,7 +1,5 @@
 
-console.log('hello rich');
 var malebrancheUtils = require('./malebranche-utils.js'),
-    malebrancheIO = require('./malebranche-io.js'),
     parsePath  = require('svg-path-parser'),
     pathBuilder = require('./svg-path-builder.js'),
     pointsParser = require('./points-parser.js');
@@ -10,8 +8,6 @@ var _isArray = malebrancheUtils.isArray;
 var _isObject = malebrancheUtils.isObject;
 var parseStringIntoJs = malebrancheUtils.parseStringIntoJs;
 var serializeJSIntoString = malebrancheUtils.serializeJSIntoString;
-var readFile = malebrancheIO.readFile;
-var writeFile = malebrancheIO.writeFile;
 var arrayFromPoints = pointsParser.arrayFromPoints;
 
 function offsetX(offset, x) {
@@ -226,16 +222,6 @@ function convertCoords(hRefLength, vRefLength, x, y, result) {
 function errorHandler(error) {
 	console.log('error', error);
 }
-
-exports.main = function(srcFile, name, hRefLength, vRefLength, x, y) {
-	readFile(srcFile)
-		.then(parseStringIntoJs)
-		.then(convertCoords.bind(null, hRefLength, vRefLength, x, y))
-		.then(serializeJSIntoString)
-		.then(writeFile.bind(null, name))
-		.catch(errorHandler);
-
-};
 
 exports.transformString = function(src, hRefLength, vRefLength, x, y) {
   return Promise.resolve(src)

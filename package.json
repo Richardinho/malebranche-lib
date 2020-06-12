@@ -1,22 +1,21 @@
 {
-  "name": "malebranche",
-  "version": "2.1.0",
+  "name": "malebranche-lib",
+  "version": "0.0.1",
   "description": "Converts clip path coordinates from absolute to fractional units between 0 and 1.",
   "main": "src/malebranche.js",
-  "scripts": {},
+  "scripts": {
+    "test": "jasmine"
+  },
   "keywords": [
     "svg",
     "clip-path"
   ],
-  "bin": {
-    "malebranche": "./bin/cli.js"
-  },
   "author": "richard hunter <richard@richardhunter.co.uk> (richardhunter.co.uk)",
   "license": "ISC",
-  "devDependencies": {},
+  "devDependencies": {
+    "jasmine": "^3.5.0"
+  },
   "dependencies": {
-    "command-line-args": "^4.0.4",
-    "command-line-usage": "^4.0.0",
     "svg-path-parser": "^1.0.1",
     "xml2js": "^0.4.16"
   }
