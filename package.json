@@ -11,6 +11,7 @@
     "clip-path"
   ],
   "author": "richard hunter <richard@richardhunter.co.uk> (richardhunter.co.uk)",
+  "repository": "https://github.com/Richardinho/malebranche-lib",
   "license": "ISC",
   "devDependencies": {
     "jasmine": "^3.5.0"
