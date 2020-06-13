@@ -22,13 +22,13 @@ function offsetY(offset, y) {
 	A ‘clipPath’ element can contain ‘path’ elements, ‘text’ elements, basic shapes (such as ‘circle’) or
 	a ‘use’ element. If a ‘use’ element is a child of a ‘clipPath’ element, it must directly reference ‘path’,
 	‘text’ or basic shape elements. Indirect references are an error (see Error processing).
-*/
-/*
+
 	The idea here is to change the coords within svgObj in place.
 */
+
 function forEachClipPath(svgObj, callback) {
 	// find all clip paths within xml and call call back on all of them
-	if(_isArray(svgObj)) {
+	if (_isArray(svgObj)) {
 		// handle as array
 		for(var i = 0; i < svgObj.length; i++) {
 			forEachClipPath(svgObj[i], callback);
@@ -135,8 +135,8 @@ function handleCommand (hRefLength, vRefLength, x, y, command) {
 	case 'A':
 		command.x =  offsetX(x, command.x  ) / hRefLength;
 		command.y =  offsetY(y, command.y  ) / vRefLength;
-		command.rx = offsetX(x, command.rx ) / hRefLength;
-		command.ry = offsetY(y, command.ry ) / vRefLength;
+		command.rx = command.rx / hRefLength;
+		command.ry = command.ry / vRefLength;
 		break;
 	case 'a':
 		command.x =  (command.x ) / hRefLength;
@@ -212,6 +212,8 @@ function changeClipPathCoords(hRefLength, vRefLength, x, y, clipPath) {
 	if(polygons) polygons.forEach(handlePolygon.bind(null,       hRefLength, vRefLength, x, y));
 	if(ellipses) ellipses.forEach(handleEllipse.bind(null,       hRefLength, vRefLength, x, y));
 	if(textArray) textArray.forEach(handleText.bind(null,        hRefLength, vRefLength, x, y));
+
+  clipPath[0]['$']['clipPathUnits'] = 'objectBoundingBox';
 }
 
 function convertCoords(hRefLength, vRefLength, x, y, result) {
@@ -223,11 +225,16 @@ function errorHandler(error) {
 	console.log('error', error);
 }
 
-exports.transformString = function(src, hRefLength, vRefLength, x, y) {
-  return Promise.resolve(src)
-    .then(parseStringIntoJs)
-		.then(convertCoords.bind(null, hRefLength, vRefLength, x, y))
-		.then(serializeJSIntoString)
+exports.transformString = function(src, hRefLength, vRefLength, x = 0, y = 0) {
+  // also check that all args are integers
+  if (hRefLength && vRefLength) {
+    return Promise.resolve(src)
+      .then(parseStringIntoJs)
+      .then(convertCoords.bind(null, hRefLength, vRefLength, x, y))
+      .then(serializeJSIntoString)
+  } else {
+    return Promise.reject('you must supply height and width');
+  }
 };
 
 

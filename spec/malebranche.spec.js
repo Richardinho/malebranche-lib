@@ -430,6 +430,7 @@ describe('read-file tests', function () {
 				y,
 				rx,
 				ry;
+
 			beforeEach(function () {
 
 				hRefLength = 93;
@@ -438,6 +439,7 @@ describe('read-file tests', function () {
 				y = 12;
 				rx = 34;
 				ry = 32;
+
 				command = {
 					code : 'A',
 					x : x,
@@ -445,13 +447,15 @@ describe('read-file tests', function () {
 					rx : rx,
 					ry : ry
 				};
+
 				malebranche.handleCommand(hRefLength, vRefLength, xmin, ymin, command);
 			});
+
 			it('should convert absolute coords to relative coords', function () {
 				expect(command.x).toBe((x - xmin) / hRefLength);
-				expect(command.rx).toBe((rx - xmin) / hRefLength);
 				expect(command.y).toBe((y - ymin) / vRefLength);
-				expect(command.ry).toBe((ry - ymin) / vRefLength);
+				expect(command.rx).toBe(rx / hRefLength);
+				expect(command.ry).toBe(ry / vRefLength);
 			});
 		});
 		describe('a', function () {
