@@ -1,3 +1,4 @@
+var INCORRECT_ARGUMENTS_ERROR = 'Incorrect_Arguments_Error';
 
 var malebrancheUtils = require('./malebranche-utils.js'),
     parsePath  = require('svg-path-parser'),
@@ -168,7 +169,7 @@ function handleRectangle(hRefLength, vRefLength, x, y, rectangle) {
 	var rectData = rectangle['$'];
 	rectData.x = offsetX(x, parseInt(rectData.x , 10)) / hRefLength;
 	rectData.y = offsetY(y, parseInt(rectData.y , 10)) / vRefLength;
-	rectData.width = parseInt(rectData.width , 10) / hRefLength;
+	rectData.width = parseInt(rectData.width, 10) / hRefLength;
 	rectData.height = parseInt(rectData.height , 10) / vRefLength;
 }
 
@@ -221,10 +222,6 @@ function convertCoords(hRefLength, vRefLength, x, y, result) {
 	return result;
 }
 
-function errorHandler(error) {
-	console.log('error', error);
-}
-
 exports.transformString = function(src, hRefLength, vRefLength, x = 0, y = 0) {
   // also check that all args are integers
   if (hRefLength && vRefLength) {
@@ -233,7 +230,10 @@ exports.transformString = function(src, hRefLength, vRefLength, x = 0, y = 0) {
       .then(convertCoords.bind(null, hRefLength, vRefLength, x, y))
       .then(serializeJSIntoString)
   } else {
-    return Promise.reject('you must supply height and width');
+    return Promise.reject({
+      name: INCORRECT_ARGUMENTS_ERROR,
+      message: 'You must supply a height and a width',
+    });
   }
 };
 

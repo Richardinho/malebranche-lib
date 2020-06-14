@@ -1,3 +1,5 @@
+var XML_PARSING_ERROR = 'Xml_Parsing_Error';
+
 var xml2js = require('xml2js'),
     util = require('util');
 
@@ -15,17 +17,21 @@ function _isArray(obj) {
 /*
 	todo: what happens when badly formed xml is fed in?
 */
-function parseStringIntoJs(xml){
-	return new Promise(function(resolve, reject){
-		parser.parseString(xml, function (err, result) {
-			if(err) {
-				reject(err);
-			} else {
-				//console.log('foo',util.inspect(result, false, null));
-				resolve(result);
-			}
-		});
-	});
+
+function parseStringIntoJs(xml){ return new
+    Promise(function(resolve, reject){
+    parser.parseString(xml, function (err, result) {
+      if (error) {
+        reject({
+          name: XML_PARSING_ERROR, 
+          message: 'failed to parse supplied svg',
+          error,
+        });
+      } else {
+        resolve(result);
+      }
+    });
+  });
 }
 
 /* takes svg object and converts it back into xml string */
