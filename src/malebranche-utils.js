@@ -20,7 +20,7 @@ function _isArray(obj) {
 
 function parseStringIntoJs(xml){ return new
     Promise(function(resolve, reject){
-    parser.parseString(xml, function (err, result) {
+    parser.parseString(xml, function (error, result) {
       if (error) {
         reject({
           name: XML_PARSING_ERROR, 
