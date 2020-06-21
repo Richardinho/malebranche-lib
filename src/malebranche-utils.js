@@ -14,13 +14,20 @@ function _isArray(obj) {
 	return Object.prototype.toString.call(obj) === '[object Array]';
 }
 
-/*
-	todo: what happens when badly formed xml is fed in?
-*/
+function dp(num, places) {
+  if (places >= 0 && places <= 20) { 
+    num = num.toFixed(places);
+  }
+
+  console.log('dp', num, places);
+}
 
 function parseStringIntoJs(xml){ return new
     Promise(function(resolve, reject){
     parser.parseString(xml, function (error, result) {
+
+      //console.log(util.inspect(result, false, null))
+
       if (error) {
         reject({
           name: XML_PARSING_ERROR, 
@@ -40,9 +47,18 @@ function serializeJSIntoString(obj) {
 	return builder.buildObject(obj);
 }
 
+function offsetX(offset, x) {
+	return x - offset;
+}
 
+function offsetY(offset, y) {
+	return y - offset;
+}
 
+exports.offsetX = offsetX;
+exports.offsetY = offsetY;
 exports.isObject = _isObject;
 exports.isArray = _isArray;
 exports.parseStringIntoJs = parseStringIntoJs;
 exports.serializeJSIntoString = serializeJSIntoString;
+exports.dp = dp;
