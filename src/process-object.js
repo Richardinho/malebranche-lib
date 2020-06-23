@@ -6,7 +6,7 @@ const MULTIPLE_ROOTS_ERROR = 'MULTIPLE_ROOTS_ERROR';
 const NO_ROOT_NODE_ERROR = 'NO_ROOT_NODE_ERROR';
 const SVG_NOT_PROVIDED_ERROR = 'SVG_NOT_PROVIDED_ERROR';
 
-module.exports = function (obj, processAttributes, context) {
+module.exports = function (obj, callback, context) {
   if (_isObject(obj)) {
     // get root object
     const keys = Object.keys(obj);
@@ -26,7 +26,7 @@ module.exports = function (obj, processAttributes, context) {
     const key = keys[0];
     const rootNode = obj[key];
 
-    return {[key]: parseNode(key, context, processAttributes, rootNode)};
+    return {[key]: processNode(key, context, callback, rootNode)};
 
   } else {
     throw {
@@ -36,7 +36,12 @@ module.exports = function (obj, processAttributes, context) {
   }
 }
 
-function parseNode(nodeName, context, processNode, node) {
+function processNode(nodeName, context, callback, node) {
+
+  /*
+   *  This will be undefined if a node has no attributes
+   */
+
   let attributes;
 
   /*
@@ -50,7 +55,7 @@ function parseNode(nodeName, context, processNode, node) {
   const result = {};
 
   /*
-   *  if node has attributes we store themm 
+   *  if node has attributes we store them
    */
   
   if (node['$']) {
@@ -61,7 +66,7 @@ function parseNode(nodeName, context, processNode, node) {
    *  process the node and update the context if necessary
    */
 
-  ({attributes, context} = processNode(nodeName, attributes, context));
+  ({attributes, context} = callback(nodeName, attributes, context));
 
   /*
    *  write attributes into result if they exist
@@ -70,6 +75,7 @@ function parseNode(nodeName, context, processNode, node) {
   if (attributes) {
     result['$'] = attributes;
   }
+
 
   /*
    *  handle rest of properties
@@ -84,8 +90,16 @@ function parseNode(nodeName, context, processNode, node) {
     if (_isArray(node[key])) {
       const childList = node[key];
 
-      result[key] = childList.map(parseNode.bind(null, key, context, processNode));
+      result[key] = childList.map(processNode.bind(null, key, context, callback));
     } 
+
+    /*
+     *  copy text content over
+     */
+
+    if (key === '_') {
+      result[key] = node[key];
+    }
   }
 
   return result;

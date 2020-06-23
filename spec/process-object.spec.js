@@ -1,5 +1,8 @@
-var parseObj = require('../src/parse-obj.js');
-var processAttributes = require('../src/process-attributes.js');
+var processObj = require('../src/process-object.js');
+
+function processAttributes(nodeName, attributes, context) {
+  return {attributes, context};
+}
 
 const obj = {
   svg: {
@@ -7,7 +10,7 @@ const obj = {
       preserveAspectRatio: 'xMinYMin meet',
       width: '100px',
       height: '100px',
-      viewBox: '0 0 200 400'
+      viewBox: '0 0 200 400',
     },
     clipPath: [
       {
@@ -18,7 +21,7 @@ const obj = {
               y: '5',
               width: '190',
               height: '390',
-              fill: 'blue'
+              fill: 'blue',
             }
           }
         ]
@@ -64,7 +67,7 @@ const expected = {
               y: '5',
               width: '190',
               height: '390',
-              fill: 'lightgoldenrodyellow'
+              fill: 'blue',
             }
           }
         ]
@@ -75,7 +78,7 @@ const expected = {
         '$': { viewBox: '0 0 500 500' },
         clipPath: [
           {
-            '$': { clipPathUnits: 'objectBoundingBox' },
+            '$': { clipPathUnits: 'useSpaceOnUse' },
             rect: [
               {
                 '$': {
@@ -83,7 +86,7 @@ const expected = {
                   y: '0',
                   width: '100',
                   height: '100',
-                  fill: 'lightgoldenrodyellow'
+                  fill: 'orange',
                 }
               }
             ]
@@ -92,13 +95,15 @@ const expected = {
       }
     ]
   }
-}
+};
 
-
-describe('parseObj()', () => {
-  it('should..', () => {
+describe('processObj()', () => {
+  it('should clone obj', () => {
     const context = {};
-    console.log(parseObj(obj, processAttributes, context));
-    expect(parseObj(obj, processAttributes, context)).toEqual(expected);
+
+    const result = processObj(obj, processAttributes, context);
+
+    expect(result).not.toBe(obj);
+    expect(result).toEqual(expected);
   });
 });
