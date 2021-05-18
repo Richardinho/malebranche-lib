@@ -7,100 +7,100 @@ const NO_ROOT_NODE_ERROR = 'NO_ROOT_NODE_ERROR';
 const SVG_NOT_PROVIDED_ERROR = 'SVG_NOT_PROVIDED_ERROR';
 
 module.exports = function (obj, callback, context) {
-  if (_isObject(obj)) {
-    // get root object
-    const keys = Object.keys(obj);
+	if (_isObject(obj)) {
+		// get root object
+		const keys = Object.keys(obj);
 
-    if (keys.length > 1) {
-      throw {
-        name: MULTIPLE_ROOTS_ERROR,
-        message: 'There is more than one root node in file',
-      }
-    } else if (keys.length < 1) {
-      throw {
-        name: NO_ROOT_NODE__ERROR,
-        message: 'No root nodes found in file',
-      };
-    }
+		if (keys.length > 1) {
+			throw {
+				name: MULTIPLE_ROOTS_ERROR,
+				message: 'There is more than one root node in file',
+			}
+		} else if (keys.length < 1) {
+			throw {
+				name: NO_ROOT_NODE__ERROR,
+				message: 'No root nodes found in file',
+			};
+		}
 
-    const key = keys[0];
-    const rootNode = obj[key];
+		const key = keys[0];
+		const rootNode = obj[key];
 
-    return {[key]: processNode(key, context, callback, rootNode)};
+		return {[key]: processNode(key, context, callback, rootNode)};
 
-  } else {
-    throw {
-      name: SVG_NOT_PROVIDED_ERROR,
-      message: 'SVG object not found in file',
-    };
-  }
+	} else {
+		throw {
+			name: SVG_NOT_PROVIDED_ERROR,
+			message: 'SVG object not found in file',
+		};
+	}
 }
 
 function processNode(nodeName, context, callback, node) {
 
-  /*
-   *  This will be undefined if a node has no attributes
-   */
+	/*
+	 *  This will be undefined if a node has no attributes
+	 */
 
-  let attributes;
+	let attributes;
 
-  /*
-   *  simple nodes, e.g. <div> with no attributes are just strings of their content
-   */
+	/*
+	 *  simple nodes, e.g. <div> with no attributes are just strings of their content
+	 */
 
-  if (typeof node === 'string') {
-    return node;
-  }
+	if (typeof node === 'string') {
+		return node;
+	}
 
-  const result = {};
+	const result = {};
 
-  /*
-   *  if node has attributes we store them
-   */
-  
-  if (node['$']) {
-    attributes = node['$'];
-  }
+	/*
+	 *  if node has attributes we store them
+	 */
 
-  /*
-   *  process the node and update the context if necessary
-   */
+	if (node['$']) {
+		attributes = node['$'];
+	}
 
-  ({attributes, context} = callback(nodeName, attributes, context));
+	/*
+	 *  process the node and update the context if necessary
+	 */
 
-  /*
-   *  write attributes into result if they exist
-   */
+	({attributes, context} = callback(nodeName, attributes, context));
 
-  if (attributes) {
-    result['$'] = attributes;
-  }
+	/*
+	 *  write attributes into result if they exist
+	 */
+
+	if (attributes) {
+		result['$'] = attributes;
+	}
 
 
-  /*
-   *  handle rest of properties
-   */
+	/*
+	 *  handle rest of properties
+	 */
 
-  for (var key in node) {
+	for (var key in node) {
 
-    /*
-     *  child nodes are wrapped in arrays
-     */
+		/*
+		 *  child nodes are wrapped in arrays
+		 */
 
-    if (_isArray(node[key])) {
-      const childList = node[key];
+		if (_isArray(node[key])) {
+			const childList = node[key];
 
-      result[key] = childList.map(processNode.bind(null, key, context, callback));
-    } 
+			result[key] = childList.map(processNode.bind(null, key, context, callback));
+		} 
 
-    /*
-     *  copy text content over
-     */
+		/*
+		 *  copy text content over
+		 */
 
-    if (key === '_') {
-      result[key] = node[key];
-    }
-  }
+		if (key === '_') {
+			result[key] = node[key];
+		}
+	}
 
-  return result;
+	return result;
 }

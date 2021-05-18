@@ -45,11 +45,11 @@ var arrayFromPoints = pointsParser.arrayFromPoints;
 function processPath(pathString, context) {
 	var pathCommands = parsePath(pathString);
 	pathCommands.forEach(handleCommand.bind(null,
-    context.width,
-    context.height,
-    context.minX,
-    context.minY,
-    context.decimalPlaces,
+		context.width,
+		context.height,
+		context.minX,
+		context.minY,
+		context.decimalPlaces,
 		context.bleed,
 	));
 
@@ -62,296 +62,296 @@ module.exports = function (key, attributes, context) {
 	const abs = createAbs(bleed);
 	const rel = createRel(bleed);
 
-  switch(key) {
-    case SVG_ELEMENT:
-      let minX;
-      let minY;
-      let width;
-      let height;
+	switch(key) {
+		case SVG_ELEMENT:
+			let minX;
+			let minY;
+			let width;
+			let height;
 
-      if (attributes) {
+			if (attributes) {
 
-        if (attributes['viewBox']) {
+				if (attributes['viewBox']) {
 
-          ({ minX, minY, width, height } = parseViewBox(attributes['viewBox']));
+					({ minX, minY, width, height } = parseViewBox(attributes['viewBox']));
 
-        } else if (attributes['width'] && attributes['height']) {
+				} else if (attributes['width'] && attributes['height']) {
 
-          minX = 0;
-          minY = 0;
-          width = attributes['width'];
-          height = attributes['height'];
+					minX = 0;
+					minY = 0;
+					width = attributes['width'];
+					height = attributes['height'];
 
-        } else {
-          throw {
-            name: NO_WIDTH_OR_HEIGHT_ERROR,
-            message: 'you need to add width and height values to root element'
-          };
-        }
-      } else {
-        throw {
-          name: NO_WIDTH_OR_HEIGHT_ERROR,
-          message: 'you need to add width and height values to root element'
-        };
-      }
+				} else {
+					throw {
+						name: NO_WIDTH_OR_HEIGHT_ERROR,
+						message: 'you need to add width and height values to root element'
+					};
+				}
+			} else {
+				throw {
+					name: NO_WIDTH_OR_HEIGHT_ERROR,
+					message: 'you need to add width and height values to root element'
+				};
+			}
 
-      context = {...context, minX, minY, width, height };
+			context = {...context, minX, minY, width, height };
 
-      break;
+			break;
 
-    case CLIP_PATH_ELEMENT:
+		case CLIP_PATH_ELEMENT:
 
-      attributes = {...attributes, clipPathUnits: 'objectBoundingBox'};
+			attributes = {...attributes, clipPathUnits: 'objectBoundingBox'};
 
-      break;
+			break;
 
-    case PATH_ELEMENT: 
+		case PATH_ELEMENT: 
 
-      attributes = [D_ATTRIBUTE].reduce((attributes, attr) => {
-        if (attributes && attributes[attr]) {
-          return {
-            ...attributes,
-            [attr]: processPath(attributes[attr], context), 
-          };
-        }
+			attributes = [D_ATTRIBUTE].reduce((attributes, attr) => {
+				if (attributes && attributes[attr]) {
+					return {
+						...attributes,
+						[attr]: processPath(attributes[attr], context), 
+					};
+				}
 
-        return attributes;
+				return attributes;
 
-      }, attributes);
+			}, attributes);
 
-      break;
+			break;
 
-    case ELLIPSE_ELEMENT:
-      attributes = [
-        CX_ATTRIBUTE,
-        CY_ATTRIBUTE,
-        RX_ATTRIBUTE,
-        RY_ATTRIBUTE,
-      ].reduce((attributes, attr) => {
-        if (attributes && attributes[attr]) {
-          const val = attributes[attr];
+		case ELLIPSE_ELEMENT:
+			attributes = [
+				CX_ATTRIBUTE,
+				CY_ATTRIBUTE,
+				RX_ATTRIBUTE,
+				RY_ATTRIBUTE,
+			].reduce((attributes, attr) => {
+				if (attributes && attributes[attr]) {
+					const val = attributes[attr];
 
-          switch(attr) {
-            case CX_ATTRIBUTE:
-              return {
-                ...attributes,
-                [attr]: abs(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
-              };
-            case CY_ATTRIBUTE:
-              return {
-                ...attributes,
-                [attr]: abs(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
-              };
-            case RX_ATTRIBUTE:
-              return {
-                ...attributes,
-                [attr]: abs(attributes[attr] / context.width, context.decimalPlaces),
-              };
-            case RY_ATTRIBUTE:
-              return {
-                ...attributes,
-                [attr]: abs(attributes[attr] / context.height, context.decimalPlaces),
-              };
-            default:
-              return attributes;
-          }
-        }
+					switch(attr) {
+						case CX_ATTRIBUTE:
+							return {
+								...attributes,
+								[attr]: abs(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
+							};
+						case CY_ATTRIBUTE:
+							return {
+								...attributes,
+								[attr]: abs(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
+							};
+						case RX_ATTRIBUTE:
+							return {
+								...attributes,
+								[attr]: abs(attributes[attr] / context.width, context.decimalPlaces),
+							};
+						case RY_ATTRIBUTE:
+							return {
+								...attributes,
+								[attr]: abs(attributes[attr] / context.height, context.decimalPlaces),
+							};
+						default:
+							return attributes;
+					}
+				}
 
-        return attributes;
+				return attributes;
 
-      }, attributes);
+			}, attributes);
 
-      break;
+			break;
 
-    case 'tref':
-      //  deprecated in SVG spec
-      break;
+		case 'tref':
+			//  deprecated in SVG spec
+			break;
 
-    case TSPAN_ELEMENT:
-    case TEXT_ELEMENT:
-      attributes = [
-        FONT_SIZE_ATTRIBUTE,
-        X_ATTRIBUTE,
-        Y_ATTRIBUTE,
-        DX_ATTRIBUTE,
-        DY_ATTRIBUTE,
-        TEXT_LENGTH_ATTRIBUTE,
-      ].reduce((attributes, attr) => {
-        if (attributes && attributes[attr]) {
-          const val = attributes[attr];
+		case TSPAN_ELEMENT:
+		case TEXT_ELEMENT:
+			attributes = [
+				FONT_SIZE_ATTRIBUTE,
+				X_ATTRIBUTE,
+				Y_ATTRIBUTE,
+				DX_ATTRIBUTE,
+				DY_ATTRIBUTE,
+				TEXT_LENGTH_ATTRIBUTE,
+			].reduce((attributes, attr) => {
+				if (attributes && attributes[attr]) {
+					const val = attributes[attr];
 
-          switch(attr) {
+					switch(attr) {
 
-            case FONT_SIZE_ATTRIBUTE:
-              return {
-                ...attributes,
-                [attr] : rel(attributes[attr] / context.height, context.decimalPlaces)
-              };
+						case FONT_SIZE_ATTRIBUTE:
+							return {
+								...attributes,
+								[attr] : rel(attributes[attr] / context.height, context.decimalPlaces)
+							};
 
-					  // we make assumption that x is a single value. In fact, it can be a list of values (see spec.)
-            case X_ATTRIBUTE:
-              return {
-                ...attributes,
-                [attr]: abs(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
-              };
+							// we make assumption that x is a single value. In fact, it can be a list of values (see spec.)
+						case X_ATTRIBUTE:
+							return {
+								...attributes,
+								[attr]: abs(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
+							};
 
-            case Y_ATTRIBUTE:
-              return {
-                ...attributes,
-                [attr]: abs(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
-              };
+						case Y_ATTRIBUTE:
+							return {
+								...attributes,
+								[attr]: abs(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
+							};
 
-            case DX_ATTRIBUTE:
-              return {
-                ...attributes,
-                [attr]: rel(attributes[attr] / context.width, context.decimalPlaces),
-              };
+						case DX_ATTRIBUTE:
+							return {
+								...attributes,
+								[attr]: rel(attributes[attr] / context.width, context.decimalPlaces),
+							};
 
-            case DY_ATTRIBUTE:
-              return {
-                ...attributes,
-                [attr]: rel(attributes[attr] / context.height, context.decimalPlaces),
-              };
+						case DY_ATTRIBUTE:
+							return {
+								...attributes,
+								[attr]: rel(attributes[attr] / context.height, context.decimalPlaces),
+							};
 
-            case TEXT_LENGTH_ATTRIBUTE:
-              return {
-                ...attributes,
-                [attr]: rel(attributes[attr] / context.width, context.decimalPlaces),
-              };
+						case TEXT_LENGTH_ATTRIBUTE:
+							return {
+								...attributes,
+								[attr]: rel(attributes[attr] / context.width, context.decimalPlaces),
+							};
 
-            default: 
-              return attributes;
-          }
-        }
+						default: 
+							return attributes;
+					}
+				}
 
-        return attributes;
+				return attributes;
 
-      }, attributes);
+			}, attributes);
 
-      break;
+			break;
 
-    case 'polygon':
-      attributes = [
-        POINTS_ATTRIBUTE,
-      ].reduce((attributes, attr) => {
-        if (attributes && attributes[attr]) {
-          const val = attributes[attr];
+		case 'polygon':
+			attributes = [
+				POINTS_ATTRIBUTE,
+			].reduce((attributes, attr) => {
+				if (attributes && attributes[attr]) {
+					const val = attributes[attr];
 
-          switch(attr) {
+					switch(attr) {
 
-            case POINTS_ATTRIBUTE:
+						case POINTS_ATTRIBUTE:
 
-              var pointsArray = arrayFromPoints(val);
-              var bool = false;
+							var pointsArray = arrayFromPoints(val);
+							var bool = false;
 
-              var transformedPointsArray = pointsArray.map(function (point) {
-                return (bool ^= true) ?
-                  abs(offsetX(context.minX, point) / context.width, context.decimalPlaces): 
-                  abs(offsetY(context.minY, point) / context.height, context.decimalPlaces);
-              });
+							var transformedPointsArray = pointsArray.map(function (point) {
+								return (bool ^= true) ?
+									abs(offsetX(context.minX, point) / context.width, context.decimalPlaces): 
+									abs(offsetY(context.minY, point) / context.height, context.decimalPlaces);
+							});
 
-              const points = transformedPointsArray.join(' ');
+							const points = transformedPointsArray.join(' ');
 
-              return {
-                ...attributes,
-                points,
-              };
+							return {
+								...attributes,
+								points,
+							};
 
-              break;
+							break;
 
-            default:
-              return attributes;
-          }
-        }
+						default:
+							return attributes;
+					}
+				}
 
-        return attributes;
-      }, attributes);
+				return attributes;
+			}, attributes);
 
-      break;
+			break;
 
-    case CIRCLE_ELEMENT:
-      attributes = [
-        CX_ATTRIBUTE,
-        CY_ATTRIBUTE,
-        R_ATTRIBUTE,
-      ].reduce((attributes, attr) => {
-        if (attributes && attributes[attr]) {
+		case CIRCLE_ELEMENT:
+			attributes = [
+				CX_ATTRIBUTE,
+				CY_ATTRIBUTE,
+				R_ATTRIBUTE,
+			].reduce((attributes, attr) => {
+				if (attributes && attributes[attr]) {
 
-          switch(attr) {
-            case CX_ATTRIBUTE:
-              return {
-                ...attributes,
-                [attr]: abs(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
-              };
+					switch(attr) {
+						case CX_ATTRIBUTE:
+							return {
+								...attributes,
+								[attr]: abs(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
+							};
 
-            case CY_ATTRIBUTE:
-              return {
-                ...attributes,
-                [attr]: abs(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
-              };
+						case CY_ATTRIBUTE:
+							return {
+								...attributes,
+								[attr]: abs(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
+							};
 
-            case R_ATTRIBUTE:
-              return {
-                ...attributes,
-                [attr]: rel(attributes[attr] / context.width, context.decimalPlaces),
-              };
+						case R_ATTRIBUTE:
+							return {
+								...attributes,
+								[attr]: rel(attributes[attr] / context.width, context.decimalPlaces),
+							};
 
-            default:
-              return attributes;
-          }
-        }
+						default:
+							return attributes;
+					}
+				}
 
-        return attributes;
-      }, attributes);
+				return attributes;
+			}, attributes);
 
 
-    case RECT_ELEMENT:
-      attributes = [
-        X_ATTRIBUTE,
-        Y_ATTRIBUTE,
-        WIDTH_ATTRIBUTE,
-        HEIGHT_ATTRIBUTE,
-      ].reduce((attributes, attr) => {
+		case RECT_ELEMENT:
+			attributes = [
+				X_ATTRIBUTE,
+				Y_ATTRIBUTE,
+				WIDTH_ATTRIBUTE,
+				HEIGHT_ATTRIBUTE,
+			].reduce((attributes, attr) => {
 
-        if (attributes && attributes[attr]) {
+				if (attributes && attributes[attr]) {
 
-          switch(attr) {
-            case X_ATTRIBUTE:
-              return {
-                ...attributes,
-                x: abs(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
-              };
+					switch(attr) {
+						case X_ATTRIBUTE:
+							return {
+								...attributes,
+								x: abs(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
+							};
 
-            case Y_ATTRIBUTE:
-              return {
-                ...attributes,
-                y: abs(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
-              };
+						case Y_ATTRIBUTE:
+							return {
+								...attributes,
+								y: abs(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
+							};
 
-            case WIDTH_ATTRIBUTE:
-              return {
-                ...attributes,
-                width: rel(attributes[attr] / context.width, context.decimalPlaces),
-              };
+						case WIDTH_ATTRIBUTE:
+							return {
+								...attributes,
+								width: rel(attributes[attr] / context.width, context.decimalPlaces),
+							};
 
-            case HEIGHT_ATTRIBUTE:
-              return {
-                ...attributes,
-                height: rel(attributes[attr] / context.height, context.decimalPlaces),
-              };
+						case HEIGHT_ATTRIBUTE:
+							return {
+								...attributes,
+								height: rel(attributes[attr] / context.height, context.decimalPlaces),
+							};
 
-            default:
-              return attributes;
-          }
-        }
-        return attributes;
-      }, attributes);
+						default:
+							return attributes;
+					}
+				}
+				return attributes;
+			}, attributes);
 
-      break;
+			break;
 
-    default:
-      break;
-  }
+		default:
+			break;
+	}
 
-  return {attributes, context};
+	return {attributes, context};
 }
