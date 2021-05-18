@@ -12,7 +12,7 @@ describe('processAttributes()', () => {
     describe('when element has no attributes', () => {
       it('should throw error', () => {
         let attributes;  // undefined
-        let context;
+        let context = {};
 
         const func = processAttributes.bind(null, nodeName, attributes, context);
 
@@ -29,7 +29,7 @@ describe('processAttributes()', () => {
           foo: 'foo',
         };
 
-        let context;
+        let context = {};
 
         const func = processAttributes.bind(null, nodeName, attributes, context);
 
@@ -46,7 +46,7 @@ describe('processAttributes()', () => {
           viewBox: '1 2 3 4',
         };
 
-        let context;
+        let context = {};
 
         ({context} = processAttributes(nodeName, attributes, context));
 
@@ -66,7 +66,7 @@ describe('processAttributes()', () => {
           height: 23,
         };
 
-        let context;
+        let context = {};
 
         ({context} = processAttributes(nodeName, attributes, context));
 
@@ -87,7 +87,7 @@ describe('processAttributes()', () => {
           viewBox: '1 2 3 4', 
         };
 
-        let context;
+        let context = {};
 
         ({context} = processAttributes(nodeName, attributes, context));
 
@@ -107,7 +107,7 @@ describe('processAttributes()', () => {
     describe('when element does NOT have any attributes', () => {
       it('should return attributes object with clipPathUnits set', () => {
         let attributes; // undefined
-        let context;
+        let context = {};
 
         ({context, attributes} = processAttributes(nodeName, attributes, context));
 
@@ -124,7 +124,7 @@ describe('processAttributes()', () => {
     describe('when element does NOT have any attributes', () => {
       it('should return undefined attributes object', () => {
         let attributes; // undefined
-        let context;
+        let context = {};
 
         ({attributes} = processAttributes(nodeName, attributes, context));
 
@@ -135,7 +135,7 @@ describe('processAttributes()', () => {
     describe('when element has non-relevant attributes', () => {
       let result;
       let attributes;
-      let context;
+			let context = {};
 
       beforeEach(() => {
         attributes = {
@@ -158,7 +158,7 @@ describe('processAttributes()', () => {
 
     describe('when element has attributes to process', () => {
       let attributes;
-      let context;
+			let context;
       let result;
 
       beforeEach(() => {
@@ -167,6 +167,7 @@ describe('processAttributes()', () => {
           minY: 0,
           width: WIDTH,
           height: HEIGHT,
+					bleed: 0,
         };
 
         attributes = {
@@ -199,6 +200,7 @@ describe('processAttributes()', () => {
         minY: 0,
         width: WIDTH,
         height: HEIGHT,
+				bleed: 0,
       };
     });
 
@@ -276,6 +278,7 @@ describe('processAttributes()', () => {
         minY: 0,
         width: WIDTH,
         height: HEIGHT,
+				bleed: 0,
       };
     });
 
@@ -359,6 +362,7 @@ describe('processAttributes()', () => {
         minY: 0,
         width: WIDTH,
         height: 100,
+				bleed: 0,
       };
     });
 
@@ -444,6 +448,7 @@ describe('processAttributes()', () => {
         minY: 0,
         width: WIDTH,
         height: HEIGHT,
+				bleed: 0,
       };
     });
 
@@ -520,6 +525,7 @@ describe('processAttributes()', () => {
         minY: 0,
         width: WIDTH,
         height: HEIGHT,
+				bleed: 0,
       };
     });
 

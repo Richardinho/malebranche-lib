@@ -19,7 +19,28 @@ function dp(num, places) {
     num = num.toFixed(places);
   }
 
-  return num;
+	return num;
+}
+
+
+function createRel(bleed) {
+	// returns a string
+	return function (num, places) {
+		num = (num * ((bleed * 2) + 1));
+		num = dp(num, places);
+
+		return num;
+	}
+}
+
+function createAbs(bleed) {
+	// returns a string
+	return function (num, places) {
+		num = (num * ((bleed * 2) + 1)) - bleed;
+		num = dp(num, places);
+
+		return num;
+	};
 }
 
 function parseStringIntoJs(xml){ return new
@@ -61,4 +82,5 @@ exports.isObject = _isObject;
 exports.isArray = _isArray;
 exports.parseStringIntoJs = parseStringIntoJs;
 exports.serializeJSIntoString = serializeJSIntoString;
-exports.dp = dp;
+exports.createAbs = createAbs;
+exports.createRel = createRel;

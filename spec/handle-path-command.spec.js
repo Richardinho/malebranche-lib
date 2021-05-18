@@ -7,7 +7,8 @@ describe('read-file tests', function () {
 		    vRefLength,
 		    x, y, xmin = -23, ymin = 78,
         places = Infinity,
-		    command;
+		    command,
+				bleed = 0;
 
 		describe('M', function () {
 
@@ -22,7 +23,7 @@ describe('read-file tests', function () {
 					y : y
 				};
 
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -44,7 +45,7 @@ describe('read-file tests', function () {
 					y,
 				};
 
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -66,7 +67,7 @@ describe('read-file tests', function () {
 					y,
 				};
 
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -88,7 +89,7 @@ describe('read-file tests', function () {
 					y,
 				};
 
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -107,7 +108,7 @@ describe('read-file tests', function () {
 					y,
 				};
 
-				handleCommand(null, vRefLength, xmin, ymin, places, command);
+				handleCommand(null, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -125,7 +126,7 @@ describe('read-file tests', function () {
 					y,
 				};
 
-				handleCommand(null, vRefLength, xmin, ymin, places, command);
+				handleCommand(null, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -143,7 +144,7 @@ describe('read-file tests', function () {
 					x,
 				};
 
-				handleCommand(hRefLength, null, xmin, ymin, places, command);
+				handleCommand(hRefLength, null, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -161,7 +162,7 @@ describe('read-file tests', function () {
 					x,
 				};
 
-				handleCommand(hRefLength, null, xmin, ymin, places, command);
+				handleCommand(hRefLength, null, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -197,7 +198,7 @@ describe('read-file tests', function () {
 					y2
 				};
 
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -238,7 +239,7 @@ describe('read-file tests', function () {
 					y2
 				};
 
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -273,7 +274,7 @@ describe('read-file tests', function () {
 					y2
 				};
 
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -304,7 +305,7 @@ describe('read-file tests', function () {
 					x2,
 					y2
 				};
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -336,7 +337,7 @@ describe('read-file tests', function () {
 					y1
 				};
 
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -368,7 +369,7 @@ describe('read-file tests', function () {
 					y1,
 				};
 
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -395,7 +396,7 @@ describe('read-file tests', function () {
 					y,
 				};
 
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -420,7 +421,7 @@ describe('read-file tests', function () {
 					y
 				};
 
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -452,7 +453,7 @@ describe('read-file tests', function () {
 					ry,
 				};
 
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {
@@ -486,7 +487,7 @@ describe('read-file tests', function () {
 					ry
 				};
 
-				handleCommand(hRefLength, vRefLength, xmin, ymin, places, command);
+				handleCommand(hRefLength, vRefLength, xmin, ymin, places, bleed, command);
 			});
 
 			it('should convert absolute coords to relative coords', function () {

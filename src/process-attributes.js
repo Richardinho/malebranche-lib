@@ -3,7 +3,14 @@ const pointsParser = require('./points-parser.js');
 const parsePath  = require('svg-path-parser');
 const pathBuilder = require('./svg-path-builder.js');
 const handleCommand = require('./handle-command.js');
-const {dp, offsetX, offsetY} = require('./malebranche-utils.js');
+const {
+	createAbs,
+	createRel,
+	offsetX,
+	offsetY
+
+} = require('./malebranche-utils.js');
+
 
 const NO_WIDTH_OR_HEIGHT_ERROR = 'NO_WIDTH_OR_HEIGHT_ERROR';
 
@@ -42,12 +49,18 @@ function processPath(pathString, context) {
     context.height,
     context.minX,
     context.minY,
-    context.decimalPlaces));
+    context.decimalPlaces,
+		context.bleed,
+	));
 
 	return pathBuilder.build(pathCommands);
 }
 
 module.exports = function (key, attributes, context) {
+	const bleed = context.bleed;
+
+	const abs = createAbs(bleed);
+	const rel = createRel(bleed);
 
   switch(key) {
     case SVG_ELEMENT:
@@ -122,22 +135,22 @@ module.exports = function (key, attributes, context) {
             case CX_ATTRIBUTE:
               return {
                 ...attributes,
-                [attr]: dp(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
+                [attr]: abs(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
               };
             case CY_ATTRIBUTE:
               return {
                 ...attributes,
-                [attr]: dp(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
+                [attr]: abs(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
               };
             case RX_ATTRIBUTE:
               return {
                 ...attributes,
-                [attr]: dp(attributes[attr] / context.width, context.decimalPlaces),
+                [attr]: abs(attributes[attr] / context.width, context.decimalPlaces),
               };
             case RY_ATTRIBUTE:
               return {
                 ...attributes,
-                [attr]: dp(attributes[attr] / context.height, context.decimalPlaces),
+                [attr]: abs(attributes[attr] / context.height, context.decimalPlaces),
               };
             default:
               return attributes;
@@ -172,37 +185,38 @@ module.exports = function (key, attributes, context) {
             case FONT_SIZE_ATTRIBUTE:
               return {
                 ...attributes,
-                [attr] : dp(attributes[attr] / context.height, context.decimalPlaces)
+                [attr] : rel(attributes[attr] / context.height, context.decimalPlaces)
               };
 
+					  // we make assumption that x is a single value. In fact, it can be a list of values (see spec.)
             case X_ATTRIBUTE:
               return {
                 ...attributes,
-                [attr]: dp(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
+                [attr]: abs(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
               };
 
             case Y_ATTRIBUTE:
               return {
                 ...attributes,
-                [attr]: dp(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
+                [attr]: abs(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
               };
 
             case DX_ATTRIBUTE:
               return {
                 ...attributes,
-                [attr]: dp(attributes[attr] / context.width, context.decimalPlaces),
+                [attr]: rel(attributes[attr] / context.width, context.decimalPlaces),
               };
 
             case DY_ATTRIBUTE:
               return {
                 ...attributes,
-                [attr]: dp(attributes[attr] / context.height, context.decimalPlaces),
+                [attr]: rel(attributes[attr] / context.height, context.decimalPlaces),
               };
 
             case TEXT_LENGTH_ATTRIBUTE:
               return {
                 ...attributes,
-                [attr]: dp(attributes[attr] / context.width, context.decimalPlaces),
+                [attr]: rel(attributes[attr] / context.width, context.decimalPlaces),
               };
 
             default: 
@@ -232,8 +246,8 @@ module.exports = function (key, attributes, context) {
 
               var transformedPointsArray = pointsArray.map(function (point) {
                 return (bool ^= true) ?
-                  dp(offsetX(context.minX, point) / context.width, context.decimalPlaces): 
-                  dp(offsetY(context.minY, point) / context.height, context.decimalPlaces);
+                  abs(offsetX(context.minX, point) / context.width, context.decimalPlaces): 
+                  abs(offsetY(context.minY, point) / context.height, context.decimalPlaces);
               });
 
               const points = transformedPointsArray.join(' ');
@@ -267,19 +281,19 @@ module.exports = function (key, attributes, context) {
             case CX_ATTRIBUTE:
               return {
                 ...attributes,
-                [attr]: dp(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
+                [attr]: abs(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
               };
 
             case CY_ATTRIBUTE:
               return {
                 ...attributes,
-                [attr]: dp(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
+                [attr]: abs(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
               };
 
             case R_ATTRIBUTE:
               return {
                 ...attributes,
-                [attr]: dp(attributes[attr] / context.width, context.decimalPlaces),
+                [attr]: rel(attributes[attr] / context.width, context.decimalPlaces),
               };
 
             default:
@@ -305,25 +319,25 @@ module.exports = function (key, attributes, context) {
             case X_ATTRIBUTE:
               return {
                 ...attributes,
-                x: dp(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
+                x: abs(offsetX(context.minX, attributes[attr]) / context.width, context.decimalPlaces),
               };
 
             case Y_ATTRIBUTE:
               return {
                 ...attributes,
-                y: dp(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
+                y: abs(offsetY(context.minY, attributes[attr]) / context.height, context.decimalPlaces),
               };
 
             case WIDTH_ATTRIBUTE:
               return {
                 ...attributes,
-                width: dp(attributes[attr] / context.width, context.decimalPlaces),
+                width: rel(attributes[attr] / context.width, context.decimalPlaces),
               };
 
             case HEIGHT_ATTRIBUTE:
               return {
                 ...attributes,
-                height: dp(attributes[attr] / context.height, context.decimalPlaces),
+                height: rel(attributes[attr] / context.height, context.decimalPlaces),
               };
 
             default:
